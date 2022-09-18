@@ -21,7 +21,12 @@ export class FormMetadataBuilder {
         (field) => field.target.name === form.target.name
       );
       const fields = fieldArgs.map((f) => {
-        return new FieldMetadata(f.target, f.propertyKey);
+        return new FieldMetadata(
+          f.target,
+          f.propertyKey,
+          f.fieldType,
+          f.options
+        );
       });
       form.registerFields(fields);
       return form;
