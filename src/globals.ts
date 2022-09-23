@@ -1,10 +1,10 @@
-import { MetadataArgsStorage } from "./metadata/args/MetadataArgsStorage";
+import { MetadataStorage } from "./metadata/MetadataStorage";
 import { PlatformTools } from "./util/PlatformTools";
 
-export function getMetadataArgsStorage(): MetadataArgsStorage {
+export function getMetadataStorage(): MetadataStorage {
   const globalScope = PlatformTools.getGlobalVariable();
-  if (!globalScope.objectformMetadataArgsStorage)
-    globalScope.objectformMetadataArgsStorage = new MetadataArgsStorage();
+  if (!globalScope.objectformMetadataStorage)
+    globalScope.objectformMetadataStorage = new MetadataStorage();
 
-  return globalScope.objectformMetadataArgsStorage;
+  return globalScope.objectformMetadataStorage;
 }

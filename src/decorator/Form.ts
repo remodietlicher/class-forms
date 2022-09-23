@@ -1,8 +1,8 @@
-import { getMetadataArgsStorage } from "../globals";
+import { getMetadataStorage } from "../globals";
 
 export function Form() {
   return function (target: Function) {
-    getMetadataArgsStorage().forms.push({
+    getMetadataStorage().addFormMetadata({
       target: target,
     });
   };

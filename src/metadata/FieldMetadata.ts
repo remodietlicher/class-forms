@@ -2,19 +2,19 @@ import { FieldMetadataOptions } from "./options/FieldMetadataOptions";
 
 export class FieldMetadata {
   target: Function;
-  name: string;
-  fieldType: string;
+  propertyKey: string;
+  propertyType: string;
   options: FieldMetadataOptions | undefined;
 
   constructor(
     target: Function,
-    name: string,
+    propertyKey: string,
     fieldType: string,
     options?: FieldMetadataOptions
   ) {
     this.target = target;
-    this.name = name;
-    this.fieldType = fieldType;
+    this.propertyKey = propertyKey;
+    this.propertyType = fieldType;
     this.options = options;
   }
 }

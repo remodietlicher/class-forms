@@ -1,14 +1,18 @@
 import "reflect-metadata";
-import { getMetadataArgsStorage } from "../globals";
+import { getMetadataStorage } from "../globals";
 import { FieldMetadataOptions } from "../metadata/options/FieldMetadataOptions";
 
 export function Field(options?: FieldMetadataOptions) {
-  return function (target: Object, propertyKey: string) {
-    const fieldType = Reflect.getMetadata("design:type", target, propertyKey);
-    getMetadataArgsStorage().fields.push({
+  return function (target: object, propertyKey: string) {
+    const propertyType = Reflect.getMetadata(
+      "design:type",
+      target,
+      propertyKey
+    );
+    getMetadataStorage().addFieldMetadata({
       target: target.constructor,
       propertyKey: propertyKey,
-      fieldType: fieldType.name,
+      propertyType: propertyType.name,
       options: options,
     });
   };
