@@ -1,10 +1,9 @@
-import React, { ReactElement } from "react";
+import React from "react";
 import { getMetadataStorage } from "../../globals";
 import { FieldMetadata } from "../../metadata/FieldMetadata";
 import { ClassForm } from "./ClassForm";
 
-import { DateField } from "./DateField";
-import { TextField } from "./TextField";
+import { InputField } from "./InputField";
 
 export interface FieldProps {
   fieldMetadata: FieldMetadata;
@@ -15,11 +14,19 @@ export const ClassField: React.FC<FieldProps> = ({
 }: FieldProps) => {
   const fieldType = fieldMetadata.propertyType.toLowerCase();
   const renderComponent = () => {
-    let component = <TextField fieldMetadata={fieldMetadata} />;
+    let component = <p>component {fieldType} not found</p>;
     if (fieldType === "date") {
-      component = <DateField fieldMetadata={fieldMetadata} />;
+      component = (
+        <InputField fieldMetadata={fieldMetadata} inputType={fieldType} />
+      );
     } else if (fieldType === "string") {
-      component = <TextField fieldMetadata={fieldMetadata} />;
+      component = (
+        <InputField fieldMetadata={fieldMetadata} inputType={fieldType} />
+      );
+    } else if (fieldType === "number") {
+      component = (
+        <InputField fieldMetadata={fieldMetadata} inputType={fieldType} />
+      );
     } else {
       const childFormMetadata = getMetadataStorage().getFormMetadata(fieldType);
       if (childFormMetadata) {
