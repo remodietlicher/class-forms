@@ -1,6 +1,8 @@
 import React from "react";
+import { MemberClassError } from "../../error/MemberClassError";
 import { getMetadataStorage } from "../../globals";
-import { ClassField } from "./ClassField";
+import { ClassInputComponent } from "./ClassInputComponent";
+import { ClassSelectComponent } from "./ClassSelectComponent";
 
 interface FormProps {
   target: Function;
@@ -10,21 +12,22 @@ interface FormProps {
 export const ClassForm: React.FC<FormProps> = ({ target, root }: FormProps) => {
   const formMetadata = getMetadataStorage().getFormMetadata(target);
   const fieldMetadatas = getMetadataStorage().getFieldMetadatas(target);
-  const renderFieldComponents = () => {
-    return fieldMetadatas?.map((f) => {
-      return (
-        <ClassField
-          key={`ClassField_${f.target.name}_${f.propertyKey}`}
-          fieldMetadata={f}
-        />
-      );
-    });
-  };
 
   return (
     <React.Fragment key={`fragment_${formMetadata?.target.name}`}>
       <h1>{formMetadata?.target.name}</h1>
-      {root ? <form>{renderFieldComponents()}</form> : renderFieldComponents()}
+      {root ? (
+        <form>
+          <ClassInputComponent fieldMetadatas={fieldMetadatas} />
+        </form>
+      ) : formMetadata.options?.valueFetcher ? (
+        <ClassSelectComponent
+          fieldMetadatas={fieldMetadatas}
+          valueFetcher={formMetadata.options.valueFetcher}
+        />
+      ) : (
+        <ClassInputComponent fieldMetadatas={fieldMetadatas} />
+      )}
     </React.Fragment>
   );
 };

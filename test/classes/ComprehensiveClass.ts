@@ -9,6 +9,4 @@ export class ComprehensiveClass {
   numberMember: number;
   @Field()
   dateMember: Date;
-  @Field()
-  arrayMember: string[];
 }
