@@ -10,6 +10,10 @@ interface ClassSelectProps {
 
 const ADD_NEW_TEXT = "add...";
 
+/**
+ * This component renders pre-loaded class data to choose from or
+ * create new if needed
+ */
 export const ClassSelectComponent: React.FC<ClassSelectProps> = ({
   fieldMetadatas,
   valueFetcher,
@@ -17,6 +21,8 @@ export const ClassSelectComponent: React.FC<ClassSelectProps> = ({
   const [classOptions, setClassOptions] = useState([ADD_NEW_TEXT]);
   const [selectedClass, setSelectedClass] = useState(ADD_NEW_TEXT);
 
+  // if a class provides a fetch function, it also must provide a primary key
+  // to be identified by
   const primaryField = fieldMetadatas.filter((f) => f.options?.primary);
 
   if (!primaryField || primaryField.length === 0) {
@@ -34,6 +40,7 @@ export const ClassSelectComponent: React.FC<ClassSelectProps> = ({
     setSelectedClass(event.target.value);
   };
 
+  // load avaliable class data, potentially asynchronously from database
   useEffect(() => {
     const fetchClassOptions = async (f: () => Promise<any[]>) => {
       const availableObjects = await f();

@@ -6,6 +6,9 @@ interface InputFieldProps {
   inputType: "date" | "string" | "number";
 }
 
+/**
+ * Wrapper component for the HTML `input` element
+ */
 export const InputField: React.FC<InputFieldProps> = ({
   fieldMetadata,
   inputType,

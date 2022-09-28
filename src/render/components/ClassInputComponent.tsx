@@ -6,6 +6,10 @@ interface ClassInputProps {
   fieldMetadatas: FieldMetadata[];
 }
 
+/**
+ * Renders the individual member fields for a given class
+ * based on the field metadata it receives
+ */
 export const ClassInputComponent: React.FC<ClassInputProps> = ({
   fieldMetadatas,
 }: ClassInputProps) => {

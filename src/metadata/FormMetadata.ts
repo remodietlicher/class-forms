@@ -1,7 +1,14 @@
 import { FormMetadataOptions } from "./options/FormMetadataOptions";
 
+/**
+ * Class that holds metadata for entire objects. Note that each form field
+ * annotated by {@link Field} will share the target with the associated
+ * form class
+ */
 export class FormMetadata {
+  // constructor of the form class
   target: Function;
+  // opional form metadata
   options: FormMetadataOptions | undefined;
 
   constructor(target: Function, options?: FormMetadataOptions) {

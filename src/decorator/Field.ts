@@ -2,6 +2,11 @@ import "reflect-metadata";
 import { getMetadataStorage } from "../globals";
 import { FieldMetadataOptions } from "../metadata/options/FieldMetadataOptions";
 
+/**
+ *
+ * @param options additional metadata for class fields
+ * @returns
+ */
 export function Field(options?: FieldMetadataOptions) {
   return function (target: object, propertyKey: string) {
     const propertyType = Reflect.getMetadata(
