@@ -1,11 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { MemberClassError } from "../../error/MemberClassError";
 import { FieldMetadata } from "../../metadata/FieldMetadata";
+import { ValueFetcherType } from "../../metadata/options/FormMetadataOptions";
 import { ClassInputComponent } from "./ClassInputComponent";
 
+/**
+ * Properties passed to the {@link ClassSelectComponent} component
+ */
 interface ClassSelectProps {
+  // list of field metadatas
   fieldMetadatas: FieldMetadata[];
-  valueFetcher: () => Promise<any[]>;
+  // function to fetch class objects that are already available
+  valueFetcher: ValueFetcherType;
+  // additional parameters passed to the value fetcher
+  valueFetcherOptions?: any;
 }
 
 const ADD_NEW_TEXT = "add...";
@@ -17,9 +25,12 @@ const ADD_NEW_TEXT = "add...";
 export const ClassSelectComponent: React.FC<ClassSelectProps> = ({
   fieldMetadatas,
   valueFetcher,
+  valueFetcherOptions,
 }: ClassSelectProps) => {
   const [classOptions, setClassOptions] = useState([ADD_NEW_TEXT]);
   const [selectedClass, setSelectedClass] = useState(ADD_NEW_TEXT);
+
+  console.log(fieldMetadatas);
 
   // if a class provides a fetch function, it also must provide a primary key
   // to be identified by
@@ -42,10 +53,14 @@ export const ClassSelectComponent: React.FC<ClassSelectProps> = ({
 
   // load avaliable class data, potentially asynchronously from database
   useEffect(() => {
-    const fetchClassOptions = async (f: () => Promise<any[]>) => {
-      const availableObjects = await f();
-      const tmp = availableObjects.map((o) => o[primaryField[0].propertyKey]);
-      setClassOptions([ADD_NEW_TEXT, ...tmp]);
+    const fetchClassOptions = async (f: ValueFetcherType) => {
+      const availableObjects = await f(valueFetcherOptions);
+      if (availableObjects) {
+        const tmp = availableObjects?.map(
+          (o) => o[primaryField[0].propertyKey]
+        );
+        setClassOptions([ADD_NEW_TEXT, ...tmp]);
+      }
     };
     fetchClassOptions(valueFetcher);
   }, []);

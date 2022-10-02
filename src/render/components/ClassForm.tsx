@@ -8,6 +8,8 @@ interface FormProps {
   target: Function;
   // set to `true` for top-level ClassForm
   root?: boolean;
+  // additional parameters passed to the value fetcher
+  valueFetcherOptions?: any;
 }
 
 /**
@@ -17,7 +19,11 @@ interface FormProps {
  * This class is used recursively. The top-level ClassForm must be declared
  * as root (setting `root=true`)
  */
-export const ClassForm: React.FC<FormProps> = ({ target, root }: FormProps) => {
+export const ClassForm: React.FC<FormProps> = ({
+  target,
+  root,
+  valueFetcherOptions,
+}: FormProps) => {
   const formMetadata = getMetadataStorage().getFormMetadata(target);
   const fieldMetadatas = getMetadataStorage().getFieldMetadatas(target);
 
@@ -32,6 +38,7 @@ export const ClassForm: React.FC<FormProps> = ({ target, root }: FormProps) => {
         <ClassSelectComponent
           fieldMetadatas={fieldMetadatas}
           valueFetcher={formMetadata.options.valueFetcher}
+          valueFetcherOptions={valueFetcherOptions}
         />
       ) : (
         <ClassInputComponent fieldMetadatas={fieldMetadatas} />
