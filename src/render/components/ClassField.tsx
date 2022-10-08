@@ -39,7 +39,9 @@ export const ClassField: React.FC<FieldProps> = ({
       const childFormMetadata = getMetadataStorage().getFormMetadata(fieldType);
       // if there is, render the associated class form
       if (childFormMetadata) {
-        component = <ClassForm target={childFormMetadata.target} />;
+        component = (
+          <ClassForm target={childFormMetadata.target} isChild={true} />
+        );
         // else, throw error
       } else {
         throw new MemberClassError(

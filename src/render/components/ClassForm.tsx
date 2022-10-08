@@ -7,7 +7,7 @@ interface FormProps {
   // class constructor associated with the form
   target: Function;
   // set to `true` for top-level ClassForm
-  root?: boolean;
+  isChild?: boolean;
   // additional parameters passed to the value fetcher
   valueFetcherOptions?: any;
 }
@@ -16,33 +16,45 @@ interface FormProps {
  * Main entrypoint to render class forms.
  * Renders classes (and their member classes if present) as HTML forms
  * @remark
- * This class is used recursively. The top-level ClassForm must be declared
- * as root (setting `root=true`)
+ * This class can be used recursively. Any nested ClassForm must be declared
+ * with isChild (setting `isChild=true`)
  */
 export const ClassForm: React.FC<FormProps> = ({
   target,
-  root,
+  isChild,
   valueFetcherOptions,
 }: FormProps) => {
   const formMetadata = getMetadataStorage().getFormMetadata(target);
   const fieldMetadatas = getMetadataStorage().getFieldMetadatas(target);
 
+  let classComponent;
+
+  if (formMetadata.options?.valueFetcher) {
+    classComponent = (
+      <ClassSelectComponent
+        fieldMetadatas={fieldMetadatas}
+        valueFetcher={formMetadata.options.valueFetcher}
+        valueFetcherOptions={valueFetcherOptions}
+      />
+    );
+  } else {
+    classComponent = <ClassInputComponent fieldMetadatas={fieldMetadatas} />;
+  }
+
   return (
-    <React.Fragment key={`fragment_${formMetadata?.target.name}`}>
-      <h1>{formMetadata?.target.name}</h1>
-      {root ? (
+    <div key={`fragment_${formMetadata?.target.name}`}>
+      {!isChild ? (
+        // render root Form
         <form>
-          <ClassInputComponent fieldMetadatas={fieldMetadatas} />
+          <h1>{formMetadata?.target.name}</h1>
+          {classComponent}
         </form>
-      ) : formMetadata.options?.valueFetcher ? (
-        <ClassSelectComponent
-          fieldMetadatas={fieldMetadatas}
-          valueFetcher={formMetadata.options.valueFetcher}
-          valueFetcherOptions={valueFetcherOptions}
-        />
       ) : (
-        <ClassInputComponent fieldMetadatas={fieldMetadatas} />
+        <>
+          <h1>{formMetadata?.target.name}</h1>
+          {classComponent}
+        </>
       )}
-    </React.Fragment>
+    </div>
   );
 };

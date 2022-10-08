@@ -7,15 +7,13 @@ import { FetchClass } from "./classes/FetchClasses";
 
 describe("Class components", () => {
   it("should render nested classes", () => {
-    const { queryByLabelText } = render(
-      <ClassForm target={ParentClass} root={true} />
-    );
+    const { queryByLabelText } = render(<ClassForm target={ParentClass} />);
     expect(queryByLabelText("member1")).toBeTruthy();
     expect(queryByLabelText("subMember1")).toBeTruthy();
   });
   it("should render basic input fields: date, string, number", () => {
     const { queryByLabelText } = render(
-      <ClassForm target={ComprehensiveClass} root={true} />
+      <ClassForm target={ComprehensiveClass} />
     );
     expect(queryByLabelText("stringMember")).toBeTruthy();
     expect(queryByLabelText("numberMember")).toBeTruthy();
