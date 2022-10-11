@@ -1,15 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { MemberClassError } from "../../error/MemberClassError";
+import { getMetadataStorage } from "../../globals";
 import { FieldMetadata } from "../../metadata/FieldMetadata";
 import { ValueFetcherType } from "../../metadata/options/FormMetadataOptions";
-import { ClassInputComponent } from "./ClassInputComponent";
+import { FormEventHandler } from "../FormEventHandler";
+import { RegisterFormEventHandler } from "../RegisterFormEventHandler";
+import { ClassFields } from "./ClassFields";
 
 /**
- * Properties passed to the {@link ClassSelectComponent} component
+ * Properties passed to the {@link ClassSelector} component
  */
-interface ClassSelectProps {
-  // list of field metadatas
-  fieldMetadatas: FieldMetadata[];
+interface ClassSelectorProps {
+  // target class of this component
+  target: Function;
+  // function to register this class in form submission
+  registerFormEventHandler: RegisterFormEventHandler;
+  // lift state for form data
+  setFormData: React.Dispatch<any>;
   // function to fetch class objects that are already available
   valueFetcher: ValueFetcherType;
   // additional parameters passed to the value fetcher
@@ -22,15 +29,18 @@ const ADD_NEW_TEXT = "add...";
  * This component renders pre-loaded class data to choose from or
  * create new if needed
  */
-export const ClassSelectComponent: React.FC<ClassSelectProps> = ({
-  fieldMetadatas,
+export const ClassSelector: React.FC<ClassSelectorProps> = ({
+  target,
+  registerFormEventHandler,
+  setFormData,
   valueFetcher,
   valueFetcherOptions,
-}: ClassSelectProps) => {
+}: ClassSelectorProps) => {
   const [classOptions, setClassOptions] = useState([ADD_NEW_TEXT]);
   const [selectedClass, setSelectedClass] = useState(ADD_NEW_TEXT);
 
-  console.log(fieldMetadatas);
+  // get field metadata by target class
+  const fieldMetadatas = getMetadataStorage().getFieldMetadatas(target);
 
   // if a class provides a fetch function, it also must provide a primary key
   // to be identified by
@@ -75,7 +85,11 @@ export const ClassSelectComponent: React.FC<ClassSelectProps> = ({
         ))}
       </select>
       {selectedClass === ADD_NEW_TEXT && (
-        <ClassInputComponent fieldMetadatas={fieldMetadatas} />
+        <ClassFields
+          target={target}
+          registerFormEventHandler={registerFormEventHandler}
+          setFormData={setFormData}
+        />
       )}
     </>
   );

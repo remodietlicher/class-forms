@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { getMetadataStorage } from "../../globals";
-import { ClassInputComponent } from "./ClassInputComponent";
-import { ClassSelectComponent } from "./ClassSelectComponent";
+import { ClassFields } from "./ClassFields";
+import { ClassFormUnit } from "./ClassFormUnit";
+import { ClassSelector } from "./ClassSelector";
 
 interface FormProps {
   // class constructor associated with the form
@@ -25,36 +26,33 @@ export const ClassForm: React.FC<FormProps> = ({
   valueFetcherOptions,
 }: FormProps) => {
   const formMetadata = getMetadataStorage().getFormMetadata(target);
-  const fieldMetadatas = getMetadataStorage().getFieldMetadatas(target);
 
-  let classComponent;
+  // store child submission handles
+  const [childSubmissionHandlers, setChildSubmissionHandlers] = useState<
+    typeof onSubmitHandler[]
+  >([]);
 
-  if (formMetadata.options?.valueFetcher) {
-    classComponent = (
-      <ClassSelectComponent
-        fieldMetadatas={fieldMetadatas}
-        valueFetcher={formMetadata.options.valueFetcher}
-        valueFetcherOptions={valueFetcherOptions}
-      />
-    );
-  } else {
-    classComponent = <ClassInputComponent fieldMetadatas={fieldMetadatas} />;
-  }
+  // helper function for form submission
+  const onSubmitHandler = (e) => {
+    e.preventDefault();
+    formMetadata.onSubmitHandler({ dummy: "data" });
+  };
+
+  // register form submission from child form
+  const registerFormEventHandler = (submitHandler) => {
+    setChildSubmissionHandlers((previousState) => [
+      ...previousState,
+      submitHandler,
+    ]);
+  };
 
   return (
-    <div key={`fragment_${formMetadata?.target.name}`}>
-      {!isChild ? (
-        // render root Form
-        <form>
-          <h1>{formMetadata?.target.name}</h1>
-          {classComponent}
-        </form>
-      ) : (
-        <>
-          <h1>{formMetadata?.target.name}</h1>
-          {classComponent}
-        </>
-      )}
-    </div>
+    <form onSubmit={onSubmitHandler}>
+      <ClassFormUnit
+        target={target}
+        registerFormSubmission={registerFormEventHandler}
+      />
+      <button type="submit">submit</button>
+    </form>
   );
 };

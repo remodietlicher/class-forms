@@ -3,12 +3,19 @@ import { MemberClassError } from "../../error/MemberClassError";
 import { NotImplementedError } from "../../error/NotImplementedError";
 import { getMetadataStorage } from "../../globals";
 import { FieldMetadata } from "../../metadata/FieldMetadata";
+import { RegisterFormEventHandler } from "../RegisterFormEventHandler";
 import { ClassForm } from "./ClassForm";
+import { ClassFormUnit } from "./ClassFormUnit";
 
 import { InputField } from "./InputField";
 
 export interface FieldProps {
+  // Metadata from decorators for this field
   fieldMetadata: FieldMetadata;
+  // function to register this class in form submission
+  registerFormEventHandler: RegisterFormEventHandler;
+  // lift state for form data
+  setFormData: React.Dispatch<any>;
 }
 
 /**
@@ -16,21 +23,35 @@ export interface FieldProps {
  */
 export const ClassField: React.FC<FieldProps> = ({
   fieldMetadata,
+  setFormData,
+  registerFormEventHandler,
 }: FieldProps) => {
   const fieldType = fieldMetadata.propertyType.toLowerCase();
   const renderComponent = () => {
     let component = <p>component {fieldType} not found</p>;
     if (fieldType === "date") {
       component = (
-        <InputField fieldMetadata={fieldMetadata} inputType={fieldType} />
+        <InputField
+          fieldMetadata={fieldMetadata}
+          inputType={fieldType}
+          setFormData={setFormData}
+        />
       );
     } else if (fieldType === "string") {
       component = (
-        <InputField fieldMetadata={fieldMetadata} inputType={fieldType} />
+        <InputField
+          fieldMetadata={fieldMetadata}
+          inputType={fieldType}
+          setFormData={setFormData}
+        />
       );
     } else if (fieldType === "number") {
       component = (
-        <InputField fieldMetadata={fieldMetadata} inputType={fieldType} />
+        <InputField
+          fieldMetadata={fieldMetadata}
+          inputType={fieldType}
+          setFormData={setFormData}
+        />
       );
     } else if (fieldType === "array") {
       throw new NotImplementedError("Array forms");
@@ -40,7 +61,10 @@ export const ClassField: React.FC<FieldProps> = ({
       // if there is, render the associated class form
       if (childFormMetadata) {
         component = (
-          <ClassForm target={childFormMetadata.target} isChild={true} />
+          <ClassFormUnit
+            target={childFormMetadata.target}
+            registerFormSubmission={registerFormEventHandler}
+          />
         );
         // else, throw error
       } else {

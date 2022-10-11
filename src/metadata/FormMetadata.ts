@@ -1,3 +1,4 @@
+import { OnSubmitHandler } from "../decorator/Form";
 import { FormMetadataOptions } from "./options/FormMetadataOptions";
 
 /**
@@ -6,6 +7,8 @@ import { FormMetadataOptions } from "./options/FormMetadataOptions";
  * form class
  */
 export class FormMetadata {
+  // on submit callback
+  onSubmitHandler: OnSubmitHandler;
   // constructor of the form class
   target: Function;
   // opional form metadata
