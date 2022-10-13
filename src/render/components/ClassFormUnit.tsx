@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getMetadataStorage } from "../../globals";
 import { ClassFields } from "./ClassFields";
 import { ClassSelector } from "./ClassSelector";
@@ -10,6 +10,10 @@ interface ClassFormUnitProps {
   registerFormSubmission: any;
   // additional parameters passed to the value fetcher
   valueFetcherOptions?: any;
+  // for nested class forms, pass down the parent's form setter method
+  setParentFormData?: React.Dispatch<any>;
+  // the name of the parent's nesting member
+  parentFormDataPropertyKey?: string;
 }
 
 /**
@@ -21,6 +25,8 @@ export const ClassFormUnit: React.FC<ClassFormUnitProps> = ({
   target,
   registerFormSubmission,
   valueFetcherOptions,
+  setParentFormData,
+  parentFormDataPropertyKey,
 }: ClassFormUnitProps) => {
   const formMetadata = getMetadataStorage().getFormMetadata(target);
   const fieldMetadatas = getMetadataStorage().getFieldMetadatas(target);
@@ -33,6 +39,15 @@ export const ClassFormUnit: React.FC<ClassFormUnitProps> = ({
 
   // store input for all fields
   const [formData, setFormData] = useState(formDataTemplate);
+
+  // link this form data to it's parent
+  if (setParentFormData && parentFormDataPropertyKey) {
+    useEffect(() => {
+      setParentFormData((prev) => {
+        return { ...prev, ...{ [parentFormDataPropertyKey]: formData } };
+      });
+    }, [formData]);
+  }
 
   let classComponent;
   // get class data from database if a fetcher is given

@@ -54,7 +54,7 @@ export const ClassField: React.FC<FieldProps> = ({
         />
       );
     } else if (fieldType === "array") {
-      throw new NotImplementedError("Array forms");
+      throw new NotImplementedError("Array fields");
     } else {
       // if the field type is a class, check if form data is available for it
       const childFormMetadata = getMetadataStorage().getFormMetadata(fieldType);
@@ -64,12 +64,14 @@ export const ClassField: React.FC<FieldProps> = ({
           <ClassFormUnit
             target={childFormMetadata.target}
             registerFormSubmission={registerFormEventHandler}
+            setParentFormData={setFormData}
+            parentFormDataPropertyKey={fieldMetadata.propertyKey}
           />
         );
         // else, throw error
       } else {
         throw new MemberClassError(
-          `cannot render form for class member ${fieldType}, no metadata found`
+          `no metadata found for member type ${fieldType}`
         );
       }
     }

@@ -32,7 +32,6 @@ export const InputField: React.FC<InputFieldProps> = ({
     console.log(`setting form data with ${input}`);
     setFormData((prev) => {
       const newKey = { [fieldMetadata.propertyKey]: input };
-
       return { ...prev, ...newKey };
     });
   };
