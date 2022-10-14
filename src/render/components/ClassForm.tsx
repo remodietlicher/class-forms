@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { getMetadataStorage } from "../../globals";
-import { ClassFields } from "./ClassFields";
 import { ClassFormUnit } from "./ClassFormUnit";
-import { ClassSelector } from "./ClassSelector";
 
 interface FormProps {
   // class constructor associated with the form
@@ -27,23 +25,23 @@ export const ClassForm: React.FC<FormProps> = ({
 }: FormProps) => {
   const formMetadata = getMetadataStorage().getFormMetadata(target);
 
-  // store child submission handles
-  const [childSubmissionHandlers, setChildSubmissionHandlers] = useState<
-    typeof onSubmitHandler[]
-  >([]);
+  // store child submission handlers
+  const [childSubmissionHandlers, setChildSubmissionHandlers] = useState({});
 
   // helper function for form submission
   const onSubmitHandler = (e) => {
     e.preventDefault();
-    formMetadata.onSubmitHandler({ dummy: "data" });
+    console.log("submission pressed");
+    for (let key in childSubmissionHandlers) {
+      childSubmissionHandlers[key]();
+    }
   };
 
   // register form submission from child form
-  const registerFormEventHandler = (submitHandler) => {
-    setChildSubmissionHandlers((previousState) => [
-      ...previousState,
-      submitHandler,
-    ]);
+  const registerFormEventHandler = (name, submitHandler) => {
+    setChildSubmissionHandlers((prev) => {
+      return { ...prev, ...{ [name]: submitHandler } };
+    });
   };
 
   return (

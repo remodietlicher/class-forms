@@ -40,6 +40,13 @@ export const ClassFormUnit: React.FC<ClassFormUnitProps> = ({
   // store input for all fields
   const [formData, setFormData] = useState(formDataTemplate);
 
+  // register this class' form submission handler with the root class form
+  useEffect(() => {
+    registerFormSubmission(formMetadata.target.name, () => {
+      formMetadata.onSubmitHandler(formData);
+    });
+  }, [formData]);
+
   // link this form data to it's parent
   if (setParentFormData && parentFormDataPropertyKey) {
     useEffect(() => {
