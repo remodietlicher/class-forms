@@ -21,15 +21,16 @@ export const ClassForm: React.FC<FormProps> = ({ target }: FormProps) => {
   const [childSubmissionHandlers, setChildSubmissionHandlers] = useState({});
 
   // helper function for form submission
-  const onSubmitHandler = (e) => {
+  const onSubmitHandler = async (e) => {
     e.preventDefault();
     console.log("submission pressed");
     for (let key in childSubmissionHandlers) {
-      childSubmissionHandlers[key]();
+      await childSubmissionHandlers[key]();
     }
   };
 
   // register form submission from child form
+  // The handlers are stored by name of the child class
   const registerFormEventHandler = (name, submitHandler) => {
     setChildSubmissionHandlers((prev) => {
       return { ...prev, ...{ [name]: submitHandler } };
