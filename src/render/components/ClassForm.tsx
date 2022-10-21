@@ -5,10 +5,6 @@ import { ClassFormUnit } from "./ClassFormUnit";
 interface FormProps {
   // class constructor associated with the form
   target: Function;
-  // set to `true` for top-level ClassForm
-  isChild?: boolean;
-  // additional parameters passed to the value fetcher
-  valueFetcherOptions?: any;
 }
 
 /**
@@ -18,11 +14,7 @@ interface FormProps {
  * This class can be used recursively. Any nested ClassForm must be declared
  * with isChild (setting `isChild=true`)
  */
-export const ClassForm: React.FC<FormProps> = ({
-  target,
-  isChild,
-  valueFetcherOptions,
-}: FormProps) => {
+export const ClassForm: React.FC<FormProps> = ({ target }: FormProps) => {
   const formMetadata = getMetadataStorage().getFormMetadata(target);
 
   // store child submission handlers
